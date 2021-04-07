@@ -1,13 +1,18 @@
 package com.gf.handler;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gf.utils.JsonResult;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * @author JusChui
@@ -15,7 +20,8 @@ import java.io.IOException;
  * @Date 2021年03月28日 23:42:00
  * @Description TODO
  */
-public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+@Component
+public class MyAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
     private String url;
 
@@ -27,17 +33,18 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
         User user = (User) authentication.getPrincipal();
         String requestURI = httpServletRequest.getRequestURI();
-        System.out.println(requestURI);
         this.url = requestURI;
-        /*System.out.println(httpServletRequest.getRequestURI());
-        System.out.println("--------------");
-        System.out.println(httpServletRequest.toString());*/
-        /*System.out.println(user.getUsername());
-        //出于安全考虑，password会直接输出null
-        System.out.println(user.getPassword());
-        System.out.println(user.getAuthorities());
-        System.out.println("---------------");
-        System.out.println(user.toString());*/
         httpServletResponse.sendRedirect(url);
+
+        JsonResult jsonResult = new JsonResult();
+        jsonResult.setRtCode(200);
+        jsonResult.setRtMsg("Login Success");
+        jsonResult.setData(user);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String s = objectMapper.writeValueAsString(jsonResult);
+        httpServletResponse.setContentType("application/json;charset=utf-8");
+        PrintWriter out = httpServletResponse.getWriter();
+        out.write(s);
+        out.flush();
     }
 }

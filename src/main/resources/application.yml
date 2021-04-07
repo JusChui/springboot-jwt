@@ -3,7 +3,19 @@ server:
 
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost:5726/spring_security?useUnicode=true&characterEncoding=utf-8&useSSL=false
     username: root
     password: ju147...
+    type: com.alibaba.druid.pool.DruidDataSource
+    dbcp2:
+      initial-size: 20
+      min-idle: 10
+      max-idle: 100
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml  # 映射配置文件位置
+  type-aliases-package: com.gf.entity  #定义包别名
+  configuration:
+    call-setters-on-nulls: true   # 防止返回的字段不全
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #log4j配置

@@ -1,6 +1,7 @@
 package com.gf.controller;
 
 import com.gf.entity.User;
+import com.gf.mapper.UserMapper;
 import com.gf.service.AuthService;
 import com.gf.utils.JsonResult;
 import org.apache.ibatis.annotations.Param;
@@ -12,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -23,6 +25,9 @@ public class AuthController {
     @Qualifier("userDetailsServiceImpl")
     @Autowired
     private UserDetailsService userDetailsService;
+
+    @Autowired
+    private UserMapper userMapper;
 
     /**
      * 登录
@@ -42,6 +47,10 @@ public class AuthController {
             result.setData(user);
             result.setRtCode(200);
             result.setRtMsg("Login Success");
+        }
+        if (null == user) {
+            result.setRtCode(401);
+            result.setRtMsg("未查询到该用户");
         }
         return result;
     }

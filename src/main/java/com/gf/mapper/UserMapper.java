@@ -5,10 +5,29 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+import java.util.Map;
+
 @Mapper
 public interface UserMapper {
 
-    @Select( "select id , username , password from user where username = #{username}" )
+    @Select("select id , username , password from user where username = #{username}")
     User loadUserByUsername(@Param("username") String username);
 
+    User loadUserByMap(Map<String, Object> params);
+
+    /**
+     * 向user表中插入数据
+     *
+     * @param params 用户信息
+     * @return int
+     */
+    int saveUser(Map<String, Object> params);
+
+    /**
+     * 向user_role表中插入数据
+     * @param params  用户权限信息
+     * @return  int
+     */
+    int saveRole(Map<String, Object> params);
 }

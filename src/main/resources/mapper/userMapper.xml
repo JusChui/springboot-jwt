@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gf.mapper.UserMapper">
+    <sql id="user_column_list">
+        id
+        ,username,password,id_number,status,email,phone
+    </sql>
+    <select id="loadUserByMap" resultType="com.gf.entity.User" parameterType="java.util.Map">
+        select id, username, password, id_number, status, email, phone
+        from user
+        where 1=1
+        <if test="username!='' and username!=null">
+            and username = #{username}
+        </if>
+        <if test="id_number!='' and id_number!=null">
+            and id_number = #{id_number}
+        </if>
+        <if test="email!='' and email!=null">
+            and email = #{email}
+        </if>
+        <if test="phone!='' and phone!=null">
+            and phone = #{phone}
+        </if>
+    </select>
+    <insert id="saveUser" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.Map">
+        insert into user(username, password, id_number, status, email, phone)
+        values (#{username}, #{password}, #{id_number}, #{status}, #{email}, #{phone})
+    </insert>
+    <insert id="saveRole" parameterType="java.util.Map">
+        insert into user_role(user_id, role_id)
+        values (#{user_id}, #{role_id})
+    </insert>
+</mapper>

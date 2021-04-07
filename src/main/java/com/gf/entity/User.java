@@ -12,6 +12,10 @@ public class User implements UserDetails, Serializable {
     private Long id;
     private String username;
     private String password;
+    private String id_number;
+    private Integer status;
+    private String email;
+    private String phone;
 
     private List<Role> authorities;
 
@@ -30,6 +34,38 @@ public class User implements UserDetails, Serializable {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getId_number() {
+        return id_number;
+    }
+
+    public void setId_number(String id_number) {
+        this.id_number = id_number;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     @Override

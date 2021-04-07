@@ -1,7 +1,10 @@
 package com.gf.filter;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gf.utils.JsonResult;
 import com.gf.utils.JwtTokenUtil;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,6 +20,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {
@@ -35,7 +39,16 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
-        String token = request.getHeader( HEADER_STRING );
+        response.setContentType("application/json;charset=utf-8");
+        String token = request.getHeader(HEADER_STRING);
+        if (StringUtils.equals("/auth/login", request.getRequestURI())) {
+            chain.doFilter(request, response);
+            return;
+        } else if (StringUtils.equals("/user/addUser", request.getRequestURI())) {
+            chain.doFilter(request, response);
+            return;
+        }
+        System.out.println(9999);
         if (null != token) {
             String username = jwtTokenUtil.getUsernameFromToken(token);
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -48,6 +61,15 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
+        } else {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonResult jsonResult = new JsonResult();
+            jsonResult.setRtCode(401);
+            jsonResult.setRtMsg("未检测到有效登录信息");
+            PrintWriter out = response.getWriter();
+            out.write(objectMapper.writeValueAsString(jsonResult));
+            out.flush();
+            out.close();
         }
         chain.doFilter(request, response);
     }
