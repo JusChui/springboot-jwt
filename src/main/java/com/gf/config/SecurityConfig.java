@@ -59,11 +59,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 //因为使用JWT，所以不需要HttpSession
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                //.failureHandler(new MyAuthenticationFailureHandler())
                 .and()
                 .authorizeRequests()
-                //OPTIONS请求全部放行
-                //.antMatchers("/**").permitAll()
                 //登录接口放行
                 .antMatchers("/auth/login").permitAll()
                 //其他接口全部接受验证

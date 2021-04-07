@@ -30,10 +30,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = userMapper.loadUserByUsername(userName);
         if (null != user) {
             List<Role> roles = roleMapper.getRolesByUserId(user.getId());
-            /*for (Role role : roles
-            ) {
-                System.out.println(role.getAuthority());
-            }*/
             user.setAuthorities(roles);
         }
         return user;
