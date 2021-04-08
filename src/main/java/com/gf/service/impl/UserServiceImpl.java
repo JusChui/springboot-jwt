@@ -57,24 +57,30 @@ public class UserServiceImpl implements IUserService {
                 //两个都为空
                 jsonResult.setRtCode(201);
                 jsonResult.setRtMsg("用户名和邮箱不能同时为空");
-            } else if (!StringUtils.isEmpty(username)) {
-                //若用户名不为空，则检测用户名是否可用
-                User user1 = userMapper.loadUserByUsername(username);
-                if (null != user1) {
-                    jsonResult.setRtCode(201);
-                    jsonResult.setRtMsg("用户名已被注册");
-                }
-            } else if (!StringUtils.isEmpty(email)) {
-                //若邮箱不为空，则检测邮箱是否可用
-                Map<String, Object> emailMap = new HashMap<>();
-                emailMap.put("email", email);
-                User user2 = userMapper.loadUserByMap(emailMap);
-                if (null != user2) {
-                    jsonResult.setRtCode(201);
-                    jsonResult.setRtMsg("邮箱已被注册");
-                }
             } else {
-                //用户名和邮箱至少一个不为空，且都可用
+                //两个至少一个不为空
+                if (!StringUtils.isEmpty(username)) {
+                    //若用户名不为空，则检测用户名是否可用
+                    User user1 = userMapper.loadUserByUsername(username);
+                    if (null != user1) {
+                        //用户名不为空但不可用
+                        jsonResult.setRtCode(201);
+                        jsonResult.setRtMsg("用户名已被注册");
+                        return jsonResult;
+                    }
+                }
+                if (!StringUtils.isEmpty(email)) {
+                    //若邮箱不为空，则检测邮箱是否可用
+                    Map<String, Object> emailMap = new HashMap<>();
+                    emailMap.put("email", email);
+                    User user2 = userMapper.loadUserByMap(emailMap);
+                    if (null != user2) {
+                        //邮箱不为空但不可用
+                        jsonResult.setRtCode(201);
+                        jsonResult.setRtMsg("邮箱已被注册");
+                        return jsonResult;
+                    }
+                }
                 //手动开启事务！
                 transactionStatus =
                         dataSourceTransactionManager.getTransaction(transactionDefinition);
@@ -84,11 +90,9 @@ public class UserServiceImpl implements IUserService {
                 Map<String, Object> roleMap = new HashMap<>();
                 roleMap.put("user_id", user.getId());
                 if (status == 0) {
-                    //教师权限
-                    roleMap.put("role_id", 2);
+                    roleMap.put("role_id", 2);  // 教师权限
                 } else {
-                    //学生权限
-                    roleMap.put("role_id", 1);
+                    roleMap.put("role_id", 1);  // 学生权限
                 }
                 userMapper.saveRole(roleMap);
                 dataSourceTransactionManager.commit(transactionStatus);//提交事务
