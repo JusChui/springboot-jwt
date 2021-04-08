@@ -1,9 +1,14 @@
 package com.gf.service.impl;
 
+import com.gf.utils.PageRequest;
+import com.gf.utils.PageResult;
 import com.gf.entity.User;
 import com.gf.mapper.UserMapper;
 import com.gf.service.IUserService;
 import com.gf.utils.JsonResult;
+import com.gf.utils.PageUtils;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +16,10 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -41,6 +46,12 @@ public class UserServiceImpl implements IUserService {
         this.userMapper = userMapper;
     }
 
+    /**
+     * 添加用户信息
+     *
+     * @param params 用户信息
+     * @return json
+     */
     @Override
     public JsonResult addUser(Map<String, Object> params) {
         logger.info("UserServiceImpl_addUser入参-->" + params);
@@ -107,5 +118,68 @@ public class UserServiceImpl implements IUserService {
         }
         logger.info("UserServiceImpl_addUser出参-->" + jsonResult);
         return jsonResult;
+    }
+
+    /**
+     * 获取所有学生信息
+     *
+     * @param params 查询参数
+     * @return 返回带有血色和功能信息的JSON文件
+     */
+    /*@Override
+    public JsonResult getStudents(Map<String, Object> params) {
+        JsonResult jsonResult = new JsonResult();
+        logger.info("UserServiceImpl_getStudents入参-->" + params);
+        try {
+            List<User> userList = userMapper.loadUsersByMap(params);
+            jsonResult.setRtCode(200);
+            if (userList.size() > 0) {
+                jsonResult.setRtMsg("查询成功");
+                jsonResult.setData(userList);
+            } else {
+                jsonResult.setRtMsg("未匹配到相关数据");
+            }
+        } catch (Exception e) {
+            jsonResult.setRtCode(500);
+            jsonResult.setRtMsg("服务器出错,注册失败");
+            logger.info(e.getMessage() == null ? e.toString() : e.getMessage());
+        }
+        logger.info("UserServiceImpl_getStudents出参-->" + jsonResult);
+        return jsonResult;
+    }*/
+    @Override
+    public JsonResult getStudents(Map<String, Object> params, PageRequest pageRequest) {
+        JsonResult jsonResult = new JsonResult();
+        logger.info("UserServiceImpl_getStudents入参-->" + params);
+        PageResult pageResult;
+        try {
+            pageResult = PageUtils.getPageResult(pageRequest, getPageInfo(params, pageRequest));
+            Map<String, Object> bean = new HashMap<>();
+            bean.put("total", pageResult.getTotalSize());   //记录总数
+            jsonResult.setRtCode(200);
+            jsonResult.setRtMsg("查询成功");
+            jsonResult.setBean(bean);
+            jsonResult.setData(pageResult.getContent());
+        } catch (Exception e) {
+            jsonResult.setRtCode(500);
+            jsonResult.setRtMsg("服务器出错,注册失败");
+            logger.info(e.getMessage() == null ? e.toString() : e.getMessage());
+        }
+        logger.info("UserServiceImpl_getStudents出参-->" + jsonResult);
+        return jsonResult;
+    }
+
+    /**
+     * 调用分页插件完成分页
+     *
+     * @param pageRequest
+     * @return
+     */
+    private PageInfo<User> getPageInfo(Map<String, Object> params, PageRequest pageRequest) {
+        int pageNum = pageRequest.getPageNum();
+        int pageSize = pageRequest.getPageSize();
+        PageHelper.startPage(pageNum, pageSize);
+        List<User> sysMenus = userMapper.loadUsersByMap(params);
+        return new PageInfo<>(sysMenus);
     }
 }

@@ -17,6 +17,14 @@ public interface UserMapper {
     User loadUserByMap(Map<String, Object> params);
 
     /**
+     * 范围查询，匹配多个学生
+     *
+     * @param params
+     * @return
+     */
+    List<User> loadUsersByMap(Map<String, Object> params);
+
+    /**
      * 向user表中插入数据
      *
      * @param params 用户信息
@@ -26,8 +34,9 @@ public interface UserMapper {
 
     /**
      * 向user_role表中插入数据
-     * @param params  用户权限信息
-     * @return  int
+     *
+     * @param params 用户权限信息
+     * @return int
      */
     int saveRole(Map<String, Object> params);
 }

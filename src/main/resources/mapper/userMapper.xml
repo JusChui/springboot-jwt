@@ -7,8 +7,8 @@
         id
         ,username,password,id_number,status,email,phone
     </sql>
-    <select id="loadUserByMap" resultType="com.gf.entity.User" parameterType="java.util.Map">
-        select id, username, password, id_number, status, email, phone
+    <select id="loadUsersByMap" parameterType="java.util.Map" resultType="com.gf.entity.User">
+        select id, username, password, id_number, status, email, phone, tid,`name`
         from user
         where 1=1
         <if test="username!='' and username!=null">
@@ -22,6 +22,35 @@
         </if>
         <if test="phone!='' and phone!=null">
             and phone = #{phone}
+        </if>
+        <if test="status!='' and status!=null or status==0">
+            and status = #{status}
+        </if>
+        <if test="tid!='' and tid!=null">
+            and tid = #{tid}
+        </if>
+    </select>
+    <select id="loadUserByMap" resultType="com.gf.entity.User" parameterType="java.util.Map">
+        select id, username, password, id_number, status, email, phone, tid
+        from user
+        where 1=1
+        <if test="username!='' and username!=null">
+            and username = #{username}
+        </if>
+        <if test="id_number!='' and id_number!=null">
+            and id_number = #{id_number}
+        </if>
+        <if test="email!='' and email!=null">
+            and email = #{email}
+        </if>
+        <if test="phone!='' and phone!=null">
+            and phone = #{phone}
+        </if>
+        <if test="status!='' and status!=null">
+            and status = #{status}
+        </if>
+        <if test="tid!='' and tid!=null">
+            and tid = #{status}
         </if>
     </select>
     <insert id="saveUser" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.Map">

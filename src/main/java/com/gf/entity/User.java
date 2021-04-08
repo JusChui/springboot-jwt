@@ -16,6 +16,8 @@ public class User implements UserDetails, Serializable {
     private Integer status;
     private String email;
     private String phone;
+    private Long tid;
+    private String name;
 
     private List<Role> authorities;
 
@@ -68,6 +70,22 @@ public class User implements UserDetails, Serializable {
         this.phone = phone;
     }
 
+    public Long getTid() {
+        return tid;
+    }
+
+    public void setTid(Long tid) {
+        this.tid = tid;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     @JsonIgnore
     public String getPassword() {
@@ -91,6 +109,7 @@ public class User implements UserDetails, Serializable {
      * 用户账号是否过期
      */
     @Override
+    @JsonIgnore
     public boolean isAccountNonExpired() {
         return true;
     }
@@ -99,6 +118,7 @@ public class User implements UserDetails, Serializable {
      * 用户账号是否被锁定
      */
     @Override
+    @JsonIgnore
     public boolean isAccountNonLocked() {
         return true;
     }
@@ -107,6 +127,7 @@ public class User implements UserDetails, Serializable {
      * 用户密码是否过期
      */
     @Override
+    @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return true;
     }
@@ -115,6 +136,7 @@ public class User implements UserDetails, Serializable {
      * 用户是否可用
      */
     @Override
+    @JsonIgnore
     public boolean isEnabled() {
         return true;
     }

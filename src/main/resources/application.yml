@@ -19,3 +19,9 @@ mybatis:
   configuration:
     call-setters-on-nulls: true   # 防止返回的字段不全
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #log4j配置
+
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql

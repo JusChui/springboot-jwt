@@ -56,13 +56,13 @@ public class AuthController {
     }
 
     @PostMapping(value = "/user/hi")
-    public String userHi(String name) throws AuthenticationException {
-        return "hi " + name + " , you have 'user' role";
+    public String userHi(Authentication name) throws AuthenticationException {
+        return "hi " + name.getName() + " , you have 'user' role";
     }
 
     @PostMapping(value = "/admin/hi")
-    public String adminHi(String name) throws AuthenticationException {
-        return "hi " + name + " , you have 'admin' role";
+    public String adminHi(Authentication name) throws AuthenticationException {
+        return "hi " + name.getName() + " , you have 'admin' role";
     }
 
 

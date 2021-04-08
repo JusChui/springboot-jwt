@@ -44,11 +44,15 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         if (StringUtils.equals("/auth/login", request.getRequestURI())) {
             chain.doFilter(request, response);
             return;
-        } else if (StringUtils.equals("/user/addUser", request.getRequestURI())) {
+        }
+        if (StringUtils.equals("/user/addUser", request.getRequestURI())) {
             chain.doFilter(request, response);
             return;
         }
-        System.out.println(9999);
+        /*if (StringUtils.equals("/findPager", request.getRequestURI())){
+            chain.doFilter(request, response);
+            return;
+        }*/
         if (null != token) {
             String username = jwtTokenUtil.getUsernameFromToken(token);
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
