@@ -29,9 +29,12 @@
         <if test="tid!='' and tid!=null">
             and tid = #{tid}
         </if>
+        <if test="name!='' and name!=null">
+            and `name` = #{name}
+        </if>
     </select>
     <select id="loadUserByMap" resultType="com.gf.entity.User" parameterType="java.util.Map">
-        select id, username, password, id_number, status, email, phone, tid
+        select id, username, password, id_number, status, email, phone, tid,`name`
         from user
         where 1=1
         <if test="username!='' and username!=null">
@@ -54,8 +57,8 @@
         </if>
     </select>
     <insert id="saveUser" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.Map">
-        insert into user(username, password, id_number, status, email, phone)
-        values (#{username}, #{password}, #{id_number}, #{status}, #{email}, #{phone})
+        insert into user(username, password, id_number, status, email, phone, `name`)
+        values (#{username}, #{password}, #{id_number}, #{status}, #{email}, #{phone}, #{name})
     </insert>
     <insert id="saveRole" parameterType="java.util.Map">
         insert into user_role(user_id, role_id)

@@ -11,7 +11,7 @@ import java.util.Map;
 @Mapper
 public interface UserMapper {
 
-    @Select("select id , username , password from user where username = #{username}")
+    @Select("select id , username , password, name from user where username = #{username}")
     User loadUserByUsername(@Param("username") String username);
 
     User loadUserByMap(Map<String, Object> params);

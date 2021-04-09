@@ -7,6 +7,7 @@ import com.gf.utils.JwtTokenUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -70,6 +71,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             JsonResult jsonResult = new JsonResult();
             jsonResult.setRtCode(401);
             jsonResult.setRtMsg("未检测到有效登录信息");
+            //response.sendRedirect(loginUrl);
             PrintWriter out = response.getWriter();
             out.write(objectMapper.writeValueAsString(jsonResult));
             out.flush();
