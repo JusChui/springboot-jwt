@@ -12,7 +12,7 @@
         from user
         where 1=1
         <if test="username!='' and username!=null">
-            and username = #{username}
+            and username like CONCAT('%',#{username},'%')
         </if>
         <if test="id_number!='' and id_number!=null">
             and id_number = #{id_number}
@@ -30,7 +30,7 @@
             and tid = #{tid}
         </if>
         <if test="name!='' and name!=null">
-            and `name` = #{name}
+            and `name` like CONCAT('%',#{name},'%')
         </if>
     </select>
     <select id="loadUserByMap" resultType="com.gf.entity.User" parameterType="java.util.Map">
@@ -64,4 +64,11 @@
         insert into user_role(user_id, role_id)
         values (#{user_id}, #{role_id})
     </insert>
+    <update id="add2MyStudent" parameterType="java.util.Map">
+        update `user`
+        set tid = #{tid}
+        where id in
+        <foreach item="sids" collection="sids" open="(" separator="," close=")">#{sids}</foreach>
+        and status = 1
+    </update>
 </mapper>

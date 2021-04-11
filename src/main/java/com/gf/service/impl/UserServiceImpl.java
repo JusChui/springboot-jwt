@@ -9,6 +9,7 @@ import com.gf.utils.JsonResult;
 import com.gf.utils.PageUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.gson.Gson;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ import java.util.Map;
  * @author JusChui
  * @ClassName UserServiceImpl.java
  * @Date 2021年04月07日 22:08:00
- * @Description TODO
+ * @Description
  */
 @Service
 public class UserServiceImpl implements IUserService {
@@ -121,32 +122,10 @@ public class UserServiceImpl implements IUserService {
     }
 
     /**
-     * 获取所有学生信息
-     *
-     * @param params 查询参数
-     * @return 返回带有血色和功能信息的JSON文件
+     * @param params
+     * @param pageRequest 自定义，统一分页查询请求
+     * @return
      */
-    /*@Override
-    public JsonResult getStudents(Map<String, Object> params) {
-        JsonResult jsonResult = new JsonResult();
-        logger.info("UserServiceImpl_getStudents入参-->" + params);
-        try {
-            List<User> userList = userMapper.loadUsersByMap(params);
-            jsonResult.setRtCode(200);
-            if (userList.size() > 0) {
-                jsonResult.setRtMsg("查询成功");
-                jsonResult.setData(userList);
-            } else {
-                jsonResult.setRtMsg("未匹配到相关数据");
-            }
-        } catch (Exception e) {
-            jsonResult.setRtCode(500);
-            jsonResult.setRtMsg("服务器出错,注册失败");
-            logger.info(e.getMessage() == null ? e.toString() : e.getMessage());
-        }
-        logger.info("UserServiceImpl_getStudents出参-->" + jsonResult);
-        return jsonResult;
-    }*/
     @Override
     public JsonResult getStudents(Map<String, Object> params, PageRequest pageRequest) {
         JsonResult jsonResult = new JsonResult();
@@ -162,11 +141,17 @@ public class UserServiceImpl implements IUserService {
             jsonResult.setData(pageResult.getContent());
         } catch (Exception e) {
             jsonResult.setRtCode(500);
-            jsonResult.setRtMsg("服务器出错,注册失败");
+            jsonResult.setRtMsg("服务器出错,查询失败");
             logger.info(e.getMessage() == null ? e.toString() : e.getMessage());
         }
-        logger.info("UserServiceImpl_getStudents出参-->" + jsonResult);
+        Gson gson = new Gson();
+        logger.info("UserServiceImpl_getStudents出参-->" + gson.toJson(jsonResult));
         return jsonResult;
+    }
+
+    @Override
+    public int add2MyStudent(Map<String, Object> params) {
+        return userMapper.add2MyStudent(params);
     }
 
     /**
