@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gf.mapper.QuestionBankMapper">
+    <resultMap id="questionBankMap" type="com.gf.entity.QuestionBank">
+        <id column="id" property="id"/>
+        <result property="content" column="content"/>
+        <result property="creatTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <collection property="choices" ofType="com.gf.entity.QuestionChoice">
+            <id property="choiceId" column="cid"/>
+            <result property="questionId" column="question_id"/>
+            <result property="choiceName" column="choice_name"/>
+            <result property="choice" column="choice"/>
+        </collection>
+    </resultMap>
+    <select id="getAllQuestion" resultMap="questionBankMap">
+        SELECT qb.id,
+               qb.content,
+--                DATE_FORMAT(qb.create_time, '%Y-%m-%d %k:%i:%s') as create_time,
+               qb.create_time,
+               qb.update_time,
+               qc.id as cid,
+               qc.question_id,
+               qc.choice_name,
+               qc.choice,
+               qa.right_choice_name
+        FROM question_bank AS qb,
+             question_choice AS qc,
+             question_answer AS qa
+        WHERE qb.id = qc.question_id
+          AND qb.id = qa.question_id
+    </select>
+</mapper>
