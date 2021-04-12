@@ -42,4 +42,6 @@ public interface UserMapper {
     int saveRole(Map<String, Object> params);
 
     int add2MyStudent(Map<String, Object> params);
+
+    int removeFromMyStudent(Map<String, Object> params);
 }

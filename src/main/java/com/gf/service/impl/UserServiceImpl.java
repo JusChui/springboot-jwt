@@ -19,6 +19,7 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.util.DigestUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -152,6 +153,35 @@ public class UserServiceImpl implements IUserService {
     @Override
     public int add2MyStudent(Map<String, Object> params) {
         return userMapper.add2MyStudent(params);
+    }
+
+    @Override
+    public JsonResult removeFromMyStudent(Map<String, Object> params) {
+        JsonResult jsonResult = new JsonResult();
+        logger.info("UserServiceImpl_removeFromMyStudent入参-->" + params);
+        Gson gson = new Gson();
+        List<Map<String, Object>> studs = (List) params.get("sid");
+        List sids = new ArrayList();
+        try {
+            studs.forEach((stringObjectMap -> {
+                stringObjectMap.forEach((k, v) -> {
+                    if (StringUtils.equals("id", k)) {
+                        sids.add(v);
+                    }
+                });
+            }));
+            params.remove("sid");
+            params.put("sids", sids);
+            userMapper.removeFromMyStudent(params);
+            jsonResult.setRtCode(200);
+            jsonResult.setRtMsg("操作成功");
+        } catch (Exception e) {
+            jsonResult.setRtCode(500);
+            jsonResult.setRtMsg("服务器出错,操作失败");
+            logger.info(e.getMessage() == null ? e.toString() : e.getMessage());
+        }
+        logger.info("UserServiceImpl_removeFromMyStudent出参-->" + gson.toJson(jsonResult));
+        return jsonResult;
     }
 
     /**

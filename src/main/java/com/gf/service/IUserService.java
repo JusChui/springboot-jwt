@@ -25,4 +25,6 @@ public interface IUserService {
     JsonResult getStudents(Map<String, Object> params, PageRequest pageRequest);
 
     int add2MyStudent(Map<String, Object> params);
+
+    JsonResult removeFromMyStudent(Map<String, Object> params);
 }

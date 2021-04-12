@@ -5,10 +5,12 @@ import com.gf.utils.PageRequest;
 import com.gf.service.IUserService;
 import com.gf.utils.JsonResult;
 import com.google.gson.Gson;
+import jdk.nashorn.internal.runtime.regexp.JoniRegExp;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -93,4 +95,10 @@ public class UserController {
         return jsonResult;
     }
 
+    @RequestMapping(path = "/user/removeStudent", method = {RequestMethod.POST})
+    @ResponseBody
+    public JsonResult removeFromMyStudent(@RequestBody Map<String, Object> params) {
+        JsonResult jsonResult = userService.removeFromMyStudent(params);
+        return jsonResult;
+    }
 }

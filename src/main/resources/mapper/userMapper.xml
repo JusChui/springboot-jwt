@@ -71,4 +71,12 @@
         <foreach item="sids" collection="sids" open="(" separator="," close=")">#{sids}</foreach>
         and status = 1
     </update>
+    <update id="removeFromMyStudent" parameterType="java.util.Map">
+        update `user`
+        set tid = null
+        where id in
+        <foreach item="sids" collection="sids" open="(" separator="," close=")">#{sids}</foreach>
+        and status = 1
+        and tid = #{tid}
+    </update>
 </mapper>
