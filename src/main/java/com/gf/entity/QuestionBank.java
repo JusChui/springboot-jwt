@@ -3,6 +3,7 @@ package com.gf.entity;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -14,9 +15,10 @@ import java.util.List;
 public class QuestionBank implements Serializable {
 
     private Long id;    //题目编号
+    private float score;
     private String content; //题目内容
-    private Timestamp creatTime;
-    private Timestamp updateTime;
+    private Date creatTime;
+    private Date updateTime;
 
     private List<QuestionChoice> choices;
 
@@ -28,6 +30,14 @@ public class QuestionBank implements Serializable {
         this.id = id;
     }
 
+    public float getScore() {
+        return score;
+    }
+
+    public void setScore(float score) {
+        this.score = score;
+    }
+
     public String getContent() {
         return content;
     }
@@ -36,19 +46,19 @@ public class QuestionBank implements Serializable {
         this.content = content;
     }
 
-    public Timestamp getCreatTime() {
+    public Date getCreatTime() {
         return creatTime;
     }
 
-    public void setCreatTime(Timestamp creatTime) {
+    public void setCreatTime(Date creatTime) {
         this.creatTime = creatTime;
     }
 
-    public Timestamp getUpdateTime() {
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Timestamp updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 

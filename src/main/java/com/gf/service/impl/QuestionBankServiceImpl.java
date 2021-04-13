@@ -34,13 +34,13 @@ public class QuestionBankServiceImpl implements IQuestionBankService {
     private QuestionBankMapper questionBankMapper;
 
     @Override
-    public JsonResult getQuestions(PageRequest pageRequest) {
+    public JsonResult getQuestions(Map<String, Object> params, PageRequest pageRequest) {
         JsonResult jsonResult = new JsonResult();
         logger.info("QuestionBankServiceImpl_getQuestions执行...");
         PageResult pageResult;
         try {
             Map<String, Object> bean = new HashMap<>();
-            pageResult = PageUtils.getPageResult(pageRequest, getPageInfo(pageRequest));
+            pageResult = PageUtils.getPageResult(pageRequest, getPageInfo(params, pageRequest));
             //System.out.println(pageResult.getContent().toString());
             bean.put("total", pageResult.getTotalSize());   //记录总数
             jsonResult.setRtCode(200);
@@ -64,11 +64,11 @@ public class QuestionBankServiceImpl implements IQuestionBankService {
      * @param pageRequest
      * @return
      */
-    private PageInfo<QuestionBank> getPageInfo(PageRequest pageRequest) {
+    private PageInfo<QuestionBank> getPageInfo(Map<String, Object> params, PageRequest pageRequest) {
         int pageNum = pageRequest.getPageNum();
         int pageSize = pageRequest.getPageSize();
         PageHelper.startPage(pageNum, pageSize);
-        List<QuestionBank> sysMenus = questionBankMapper.getAllQuestion();
+        List<QuestionBank> sysMenus = questionBankMapper.getAllQuestion(params);
         return new PageInfo<QuestionBank>(sysMenus);
     }
 }

@@ -7,5 +7,5 @@ import java.util.Map;
 
 public interface IQuestionBankService {
 
-    JsonResult getQuestions(PageRequest pageRequest);
+    JsonResult getQuestions(Map<String, Object> params, PageRequest pageRequest);
 }
