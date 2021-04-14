@@ -12,8 +12,7 @@
         <collection property="choices" ofType="com.gf.entity.QuestionChoice"
                     javaType="java.util.List" select="getChoices"
                     column="id">
-            <result property="choiceId" column="cid"/>
-            <!--            <result property="questionId" column="question_id"/>-->
+            <result property="choiceId" column="cid" javaType="java.lang.String" jdbcType="varchar"/>
             <result property="choiceName" column="choice_name"/>
             <result property="choice" column="choice"/>
         </collection>
@@ -49,4 +48,34 @@
             AND qc.question_id = #{id}
         </if>
     </select>
+    <insert id="saveQuestionBankByExcel" parameterType="java.util.List">
+        <foreach collection="list" index="index" item="item" separator=",">
+            insert into question_bank(id, content, score)
+            VALUES(#{item.id},#{item.content},#{item.score})
+        </foreach>
+    </insert>
+    <!-- <update id="importSalarySome" parameterType="java.util.List">
+         <foreach collection="listData" item="mapS" index="inx">
+             UPDATE sys_user SET
+             <trim suffix="," suffixOverrides=",">
+                 <foreach collection="maps.keys" item="key" index="inr">
+                     <if test='key != "username" and key != "realname" '>${key} = #{maps[${key}]}</if>
+                 </foreach>
+             </trim>
+             where username = ${maps.username}
+         </foreach>
+     </update>-->
+    <insert id="saveRightChoiceByExcel" parameterType="java.util.List">
+        <foreach collection="list" index="index" item="item" separator=",">
+            insert into question_answer(question_id, right_choice_name)
+            VALUES(#{item.id},#{item.rightChoice})
+        </foreach>
+    </insert>
+    <insert id="saveQuestionChoiceByExcel" parameterType="java.util.List">
+        insert into question_choice(question_id,choice_name,choice)
+        values
+        <foreach collection="list" index="index" item="item" separator=",">
+            (#{item.questionId},#{item.choiceName},#{item.choice})
+        </foreach>
+    </insert>
 </mapper>

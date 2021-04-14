@@ -9,6 +9,6 @@ package com.gf.entity;
 public class QuestionAnswer {
 
     private Long id;
-    private Long questionId;
+    private String questionId;
     private String rightChoiceName;
 }

@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class QuestionBank implements Serializable {
 
-    private Long id;    //题目编号
+    private String id;    //题目编号
     private float score;
     private String content; //题目内容
     private Date creatTime;
@@ -22,11 +22,11 @@ public class QuestionBank implements Serializable {
 
     private List<QuestionChoice> choices;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

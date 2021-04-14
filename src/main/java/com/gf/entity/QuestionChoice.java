@@ -9,7 +9,7 @@ package com.gf.entity;
 public class QuestionChoice {
 
     private Long choiceId;
-    private Long questionId;
+    private String questionId;
     private String choiceName;
     private String choice;
 
@@ -21,11 +21,11 @@ public class QuestionChoice {
         this.choiceId = choiceId;
     }
 
-    public Long getQuestionId() {
+    public String getQuestionId() {
         return questionId;
     }
 
-    public void setQuestionId(Long questionId) {
+    public void setQuestionId(String questionId) {
         this.questionId = questionId;
     }
 
