@@ -9,13 +9,23 @@
         <result property="creatTime" column="create_time"/>
         <result property="updateTime" column="update_time"/>
         <result property="score" column="score"/>
+        <association property="questionAnswer" resultMap="rightChoiceMap">
+            <!--<id property="answerId" column="aid"/>
+            <result property="questionId" column="question_id"/>
+            <result property="rightChoice" column="right_choice"/>-->
+        </association>
         <collection property="choices" ofType="com.gf.entity.QuestionChoice"
                     javaType="java.util.List" select="getChoices"
                     column="id">
-            <result property="choiceId" column="cid" javaType="java.lang.String" jdbcType="varchar"/>
+            <result property="choiceId" column="cid"/>
             <result property="choiceName" column="choice_name"/>
             <result property="choice" column="choice"/>
         </collection>
+    </resultMap>
+    <resultMap id="rightChoiceMap" type="com.gf.entity.QuestionAnswer">
+        <id property="answerId" column="aid"/>
+        <result property="questionId" column="question_id"/>
+        <result property="rightChoice" column="right_choice"/>
     </resultMap>
     <select id="getAllQuestion" resultMap="questionBankMap" parameterType="java.util.Map">
         SELECT
@@ -23,8 +33,13 @@
         qb.content,
         qb.create_time,
         qb.update_time,
-        qb.score
+        qb.score,
+        qa.question_id,
+        qa.id as aid,
+        qa.right_choice
         FROM question_bank AS qb
+        LEFT JOIN question_answer AS qa
+        ON qa.question_id = qb.id
         WHERE 1=1
         <if test="questionId != null and questionId != ''">
             and qb.id = #{questionId}
@@ -33,7 +48,6 @@
             and qb.content like CONCAT('%',#{content},'%')
         </if>
     </select>
-
     <select id="getChoices" resultType="java.util.Map" parameterType="java.util.Map">
         SELECT
         qc.id AS choiceId,
@@ -54,20 +68,9 @@
             VALUES(#{item.id},#{item.content},#{item.score})
         </foreach>
     </insert>
-    <!-- <update id="importSalarySome" parameterType="java.util.List">
-         <foreach collection="listData" item="mapS" index="inx">
-             UPDATE sys_user SET
-             <trim suffix="," suffixOverrides=",">
-                 <foreach collection="maps.keys" item="key" index="inr">
-                     <if test='key != "username" and key != "realname" '>${key} = #{maps[${key}]}</if>
-                 </foreach>
-             </trim>
-             where username = ${maps.username}
-         </foreach>
-     </update>-->
     <insert id="saveRightChoiceByExcel" parameterType="java.util.List">
         <foreach collection="list" index="index" item="item" separator=",">
-            insert into question_answer(question_id, right_choice_name)
+            insert into question_answer(question_id, right_choice)
             VALUES(#{item.id},#{item.rightChoice})
         </foreach>
     </insert>
@@ -78,4 +81,28 @@
             (#{item.questionId},#{item.choiceName},#{item.choice})
         </foreach>
     </insert>
+    <delete id="deleteFromQCByIds" parameterType="java.util.List">
+        delete
+        from question_choice
+        where question_choice.question_id in
+        <foreach item="item" collection="list" separator="," open="(" close=")" index="">
+            #{item}
+        </foreach>
+    </delete>
+    <delete id="deleteFromQAByIds" parameterType="java.util.List">
+        delete
+        from question_answer
+        where question_answer.question_id in
+        <foreach item="item" collection="list" separator="," open="(" close=")" index="">
+            #{item}
+        </foreach>
+    </delete>
+    <delete id="deleteFromQBByIds" parameterType="java.util.List">
+        delete
+        from question_bank
+        where question_bank.id in
+        <foreach item="item" collection="list" separator="," open="(" close=")" index="">
+            #{item}
+        </foreach>
+    </delete>
 </mapper>

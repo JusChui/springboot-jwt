@@ -8,7 +8,31 @@ package com.gf.entity;
  */
 public class QuestionAnswer {
 
-    private Long id;
+    private Long answerId;
     private String questionId;
-    private String rightChoiceName;
+    private String rightChoice;
+
+    public Long getAnswerId() {
+        return answerId;
+    }
+
+    public void setAnswerId(Long answerId) {
+        this.answerId = answerId;
+    }
+
+    public String getQuestionId() {
+        return questionId;
+    }
+
+    public void setQuestionId(String questionId) {
+        this.questionId = questionId;
+    }
+
+    public String getRightChoice() {
+        return rightChoice;
+    }
+
+    public void setRightChoice(String rightChoice) {
+        this.rightChoice = rightChoice;
+    }
 }

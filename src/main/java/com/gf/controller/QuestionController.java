@@ -34,6 +34,13 @@ public class QuestionController {
 
     private Logger logger = Logger.getLogger(QuestionController.class);
 
+    /**
+     * 分页加载题库
+     *
+     * @param params    加载参数
+     * @param pageQuery 分页
+     * @return JsonResult
+     */
     @RequestMapping("/question/getQuestions")
     @ResponseBody
     public JsonResult getQuestions(@RequestBody Map<String, Object> params, PageRequest pageQuery) {
@@ -42,28 +49,66 @@ public class QuestionController {
         Integer pageNum = (Integer) params.get("currentPage");  //当前页码
         pageQuery.setPageNum(pageNum);
         pageQuery.setPageSize(pageSize);
+        params.remove("pageSize");
+        params.remove("currentPage");
         jsonResult = questionBankService.getQuestions(params, pageQuery);
         return jsonResult;
     }
 
-    @RequestMapping("/question/downloadQuestions")
+    /**
+     * 导出题库
+     *
+     * @param params 导出参数
+     * @return JsonResult
+     */
+    @RequestMapping(value = "/question/downloadQuestions")
     @ResponseBody
     public JsonResult downloadQuestions(@RequestBody Map<String, Object> params) {
         logger.info("QuestionController_downloadQuestions入参" + params);
-        JsonResult jsonResult = new JsonResult();
+        JsonResult jsonResult = null;
         try {
             List<Map<String, Object>> questionList = (List<Map<String, Object>>) params.get("params");
-            questionList.forEach(stringObjectMap -> {
-                System.out.println(stringObjectMap);
-            });
-        } catch (Exception e) {
+            for (int i = 0; i < questionList.size(); i++) {
+                Map<String, Object> answerMap = (Map<String, Object>) questionList.get(i).get("questionAnswer");
+                List<Map<String, Object>> choiceMapList = (List<Map<String, Object>>) questionList.get(i).get("choices");
+                questionList.get(i).put("rightChoice", answerMap.get("rightChoice"));
+                questionList.get(i).remove("questionAnswer");
+                for (int j = 0; j < choiceMapList.size(); j++) {
+                    Map<String, Object> choiceMap = choiceMapList.get(j);
+                    String choiceName = null, choice = null;
+                    for (Map.Entry map : choiceMap.entrySet()) {
+                        if (StringUtils.equals("choiceName", (String) map.getKey())) {
+                            choiceName = map.getValue().toString();
+                        }
+                        if (StringUtils.equals("choice", (String) map.getKey())) {
+                            choice = map.getValue().toString();
+                        }
+                        if (StringUtils.isNotEmpty(choiceName)) {
+                            questionList.get(i).put(choiceName, choice);
+                        }
+                    }
 
+                }
+                questionList.get(i).remove("choices");
+                questionList.get(i).remove("null");
+            }
+            jsonResult = questionBankService.downloadQuestions(questionList);
+        } catch (Exception e) {
+            logger.info("QuestionBankServiceImpl_exportTemplate异常"
+                    + e.getMessage() == null ? e.toString() : e.getMessage());
         }
-        logger.info("QuestionController_downloadQuestions出参" + new Gson().toJson(jsonResult));
+        //logger.info("QuestionController_downloadQuestions出参" + new Gson().toJson(jsonResult));
         return jsonResult;
     }
 
 
+    /**
+     * 从Excel批量导入题目
+     *
+     * @param files 要导入的文件
+     * @return JsonResult
+     * @throws IOException IoException
+     */
     @RequestMapping(path = "/question/uploadQuestions")
     @ResponseBody
     public JsonResult uploadQuestions(@RequestParam("file") MultipartFile[] files) throws IOException {
@@ -112,6 +157,31 @@ public class QuestionController {
         }
         jsonResult = questionBankService.insertQuestionsByFile(list);
         //jsonResult.setRtCode(200);
+        return jsonResult;
+    }
+
+
+    /**
+     * 下载导入模板
+     *
+     * @return
+     */
+    @RequestMapping(path = "/question/getTemplate")
+    @ResponseBody
+    public JsonResult exportTemplate() {
+        return questionBankService.exportTemplate();
+    }
+
+    @RequestMapping(path = "/question/deleteQuestions")
+    @ResponseBody
+    public JsonResult deleteQuestions(@RequestBody Map<String, Object> params) {
+        JsonResult jsonResult;
+        List<Map<String, Object>> idList = (List<Map<String, Object>>) params.get("params");
+        List<String> ids = new ArrayList<>();
+        idList.forEach(stringObjectMap -> {
+            ids.add((String) stringObjectMap.get("id"));
+        });
+        jsonResult = questionBankService.deleteQuestionFromDataBase(ids);
         return jsonResult;
     }
 }

@@ -20,6 +20,8 @@ public class QuestionBank implements Serializable {
     private Date creatTime;
     private Date updateTime;
 
+    private QuestionAnswer questionAnswer;
+
     private List<QuestionChoice> choices;
 
     public String getId() {
@@ -60,6 +62,14 @@ public class QuestionBank implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public QuestionAnswer getQuestionAnswer() {
+        return questionAnswer;
+    }
+
+    public void setQuestionAnswer(QuestionAnswer questionAnswer) {
+        this.questionAnswer = questionAnswer;
     }
 
     public List<QuestionChoice> getChoices() {

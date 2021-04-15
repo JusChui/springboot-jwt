@@ -11,9 +11,16 @@ public interface QuestionBankMapper {
 
     List<QuestionBank> getAllQuestion(Map<String, Object> params);
 
-    int saveQuestionBankByExcel(List<Map<String,Object>> params);
+    int saveQuestionBankByExcel(List<Map<String, Object>> params);
 
-    int saveRightChoiceByExcel(List<Map<String,Object>> params);
+    int saveRightChoiceByExcel(List<Map<String, Object>> params);
 
-    int saveQuestionChoiceByExcel(List<Map<String,Object>> params);
+    int saveQuestionChoiceByExcel(List<Map<String, Object>> params);
+
+    int deleteFromQAByIds(List<String> list);
+
+    int deleteFromQBByIds(List<String> list);
+
+    int deleteFromQCByIds(List<String> list);
+
 }

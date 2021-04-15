@@ -133,7 +133,7 @@ public class UserServiceImpl implements IUserService {
         logger.info("UserServiceImpl_getStudents入参-->" + params);
         PageResult pageResult;
         try {
-            pageResult = PageUtils.getPageResult(pageRequest, getPageInfo(params, pageRequest));
+            pageResult = PageUtils.getPageResult(this.getPageInfo(params, pageRequest));
             Map<String, Object> bean = new HashMap<>();
             bean.put("total", pageResult.getTotalSize());   //记录总数
             jsonResult.setRtCode(200);
